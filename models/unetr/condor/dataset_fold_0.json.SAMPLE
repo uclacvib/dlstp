@@ -1,0 +1,36 @@
+{
+    "description": "dlstp",
+    "labels": {
+        "0": "background",
+        "1": "stp-pos",
+        "2": "stp-neg",
+        "3": "vsl_gt_10m2",
+        "4": "stomach",
+        "5": "small_bowel",
+        "6": "colon"
+    },
+    "licence": "placeholder licence",
+    "modality": {
+        "0": "CT"
+    },
+    "name": "btcv",
+    "numTest": 215,
+    "numTraining": 685,
+    "reference": "placeholder University",
+    "release": "NA 1800-01-01",
+    "tensorImageSize": "3D",
+    "test": [
+        "/f08fa8_0000.nii.gz",
+        "/90bc4e_0000.nii.gz"
+    ],
+    "training": [
+        {
+            "image": "/abc/03fc563_0000.nii.gz",
+            "label": "/abc/03fc563.nii.gz"
+        },
+        {
+            "image": "/abc/e6d3418f_0000.nii.gz",
+            "label": "/abc/e6d3418f.nii.gz"
+        }
+    ]
+}

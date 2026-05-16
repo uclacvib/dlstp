@@ -1,0 +1,36 @@
+{
+    "description": "training dlstp",
+    "labels": {
+        "0": "background",
+        "1": "stp-pos",
+        "2": "stp-neg",
+        "3": "vsl_gt_10m2",
+        "4": "stomach",
+        "5": "small_bowel",
+        "6": "colon"
+    },
+    "licence": "placeholder",
+    "modality": {
+        "0": "CT"
+    },
+    "name": "dlstp",
+    "numTest": 215,
+    "numTraining": 685,
+    "reference": "placeholder",
+    "release": "NA 1800-01-01",
+    "tensorImageSize": "3D",
+    "test": [
+        "/abc/5ff08fa8_0000.nii.gz",
+        "/abc/6090bc4e_0000.nii.gz",
+    ],
+    "training": [
+        {
+            "image": "/abc/3fc563_0000.nii.gz",
+            "label": "/abc/3fc563.nii.gz"
+        },
+        {
+            "image": "/abc/26d3418f_0000.nii.gz",
+            "label": "/abc/e6d3418f.nii.gz"
+        }
+    ]
+}

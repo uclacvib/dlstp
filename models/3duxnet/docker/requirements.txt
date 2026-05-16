@@ -1,0 +1,16 @@
+torch==1.12.0a0+bd13bc6
+torchvision==0.13.0a0
+numpy==1.22.3
+tqdm==4.64.0
+tensorboard==2.8.0
+scipy==1.6.3
+scikit-learn==0.24.2
+scikit-image==0.19.3
+ptflops==0.7.3
+nibabel==3.2.2
+pillow==9.0.1
+timm==1.0.15
+SimpleITK==2.1.1
+medpy==0.4.0
+batchgenerators==0.25.1
+nnunet==1.7.1
