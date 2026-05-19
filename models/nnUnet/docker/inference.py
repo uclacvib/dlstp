@@ -1,8 +1,12 @@
+
 import os
 import sys
-import json
-import pandas as pd
+import shutil
 import argparse
+import tempfile
+import SimpleITK as sitk
+import numpy as np
+import pandas as pd
 
 from nnunetv2.paths import nnUNet_results, nnUNet_raw
 import torch
@@ -34,34 +38,34 @@ def main(nnUNet_results,input_list_of_list,output_list,fold_int=0):
                                  num_processes_preprocessing=1, num_processes_segmentation_export=2,
                                  folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0)
 
-def main_one(nnUNet_results,input_nifti_file,output_nifti_file,fold_int=0):
+def main_one(input_nifti_file,output_nifti_file,csv_file,nnUNet_results,fold_int=0):
     input_list_of_list = [[input_nifti_file]]
     output_list = [output_nifti_file]
     main(nnUNet_results,input_list_of_list,output_list,fold_int)
 
     pred_obj = sitk.ReadImage(output_nifti_file)
     pred = sitk.GetArrayFromImage(pred_obj)
-    wlung = np.logical_or(pred_obj==1,pred_obj==2)
-    progression_ratio = np.sum(pred_obj==1)/np.sum(wlung)
-    df = pd.DataFrame({"model_name":"nnunet","stp_ratio":{progression_ratio}})
+    wlung = np.logical_or(pred==1,pred==2)
+    progression_ratio = np.sum(pred==1)/np.sum(wlung)
+    df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
-
-raise NotImplementedError()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input_nifti_file')
     parser.add_argument('output_nifti_file')
+    parser.add_argument('csv_file')
     parser.add_argument('nnUNet_results')
     parser.add_argument('--fold-int',type=int,default=0,choices=[0,1,2,3,4])
 
     args = parser.parse_args()
     input_nifti_file = args.input_nifti_file
     output_nifti_file = args.output_nifti_file
+    csv_file = args.csv_file
     nnUNet_results = args.nnUNet_results
     fold_int = args.fold_int
 
-    main_one(nnUNet_results,input_nifti_file,output_nifti_file,fold_int=fold_int)
+    main_one(input_nifti_file,output_nifti_file,csv_file,nnUNet_results,fold_int=fold_int)
 
 
 """

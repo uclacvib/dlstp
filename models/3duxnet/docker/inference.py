@@ -6,13 +6,13 @@ references copied from ../../unetr/docker
 import os
 import sys
 import shutil
-import pandas as pd
 import argparse
 import tempfile
 import SimpleITK as sitk
+import pandas as pd
+import numpy as np
 
 import nibabel as nib
-import numpy as np
 import torch
 from monai.inferers import sliding_window_inference
 
@@ -126,9 +126,9 @@ def main_one(input_nifti_file,output_nifti_file,csv_file,tduxnet_results,fold_in
 
     pred_obj = sitk.ReadImage(output_nifti_file)
     pred = sitk.GetArrayFromImage(pred_obj)
-    wlung = np.logical_or(pred_obj==1,pred_obj==2)
-    progression_ratio = np.sum(pred_obj==1)/np.sum(wlung)
-    df = pd.DataFrame({"model_name":"3duxnet","stp_ratio":{progression_ratio}})
+    wlung = np.logical_or(pred==1,pred==2)
+    progression_ratio = np.sum(pred==1)/np.sum(wlung)
+    df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
 raise NotImplementedError()
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
 
 """
-tduxnet_results = f"{fold_str}/best_metric_model.pth"
-pretrained_pth = f"/placeholder/dataset/stp/tduxnet_results/{fold_str}/best_metric_model.pth"
+tduxnet_results = "/placeholder/dataset/stp/tduxnet_results"
+pretrained_pth = f"/placeholder/dataset/stp/tduxnet_results/fold_{fold_int}/best_metric_model.pth"
 
 """
