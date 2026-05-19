@@ -1,0 +1,13 @@
+FROM pangyuteng/dlstp:nnunet-v0.0.1
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install ffmpeg libsm6 libxext6 \
+    vim curl wget git wkhtmltopdf \
+    xfonts-base xfonts-utils xfonts-encodings libfontenc1 xfonts-75dpi -yq
+
+COPY requirements.report.txt /tmp
+RUN pip install -r /tmp/requirements.report.txt
+RUN pip install vtk-osmesa --extra-index-url https://gitlab.kitware.com/api/v4/projects/13/packages/pypi/simple
+
+WORKDIR /opt
