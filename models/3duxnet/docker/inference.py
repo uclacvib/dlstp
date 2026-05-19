@@ -128,7 +128,7 @@ def main_one(input_nifti_file,output_nifti_file,csv_file,tduxnet_results,fold_in
     pred = sitk.GetArrayFromImage(pred_obj)
     wlung = np.logical_or(pred==1,pred==2)
     progression_ratio = np.sum(pred==1)/np.sum(wlung)
-    df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
+    df = pd.DataFrame([{"model_name":"3duxnet","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
 

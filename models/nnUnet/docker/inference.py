@@ -47,7 +47,7 @@ def main_one(input_nifti_file,output_nifti_file,csv_file,nnUNet_results,fold_int
     pred = sitk.GetArrayFromImage(pred_obj)
     wlung = np.logical_or(pred==1,pred==2)
     progression_ratio = np.sum(pred==1)/np.sum(wlung)
-    df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
+    df = pd.DataFrame([{"model_name":"nnunet","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
 if __name__ == "__main__":
