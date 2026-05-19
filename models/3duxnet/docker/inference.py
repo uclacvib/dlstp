@@ -3,12 +3,15 @@ references copied from ../../unetr/docker
 
 """
 
-import argparse
 import os
 import sys
+import shutil
+import pandas as pd
+import argparse
+import tempfile
+import SimpleITK as sitk
 
 import nibabel as nib
-
 import numpy as np
 import torch
 from monai.inferers import sliding_window_inference
@@ -40,8 +43,10 @@ sys.path.append("/opt/3DUX-Net")
 from networks.UXNet_3D.network_backbone import UXNET
 
 
-def main(input_nifti_file_list,output_inference_folder,pretrained_pth,infer_overlap):
-    
+def main(input_nifti_file_list,output_inference_folder,tduxnet_results,fold_int=1,infer_overlap=0.5):
+
+    pretrained_pth = os.path.join(tduxnet_results,f"fold_{fold_int}/best_metric_model.pth")
+
     out_dir = output_inference_folder
     basename = "pred"
 
@@ -106,35 +111,47 @@ def main(input_nifti_file_list,output_inference_folder,pretrained_pth,infer_over
             d["pred"] = sliding_window_inference(val_inputs, (96, 96, 96), 4, model, overlap=infer_overlap)
             d = [post_transforms(i) for i in decollate_batch(d)]
 
-import os
-import sys
-import json
-import pandas as pd
-import argparse
+def main_one(input_nifti_file,output_nifti_file,csv_file,tduxnet_results,fold_int=1,infer_overlap=0.5):
 
+    input_nifti_file_list = [input_nifti_file]
+    basename = os.path.basename(input_nifti_file)
+    casename = basename.replace(".nii.gz","")
+    
+    with tempfile.TemporaryDirectory() as tempdir:
+        output_file = os.path.join(tempdir,casename,f"{casename}_pred.nii.gz")
+        main(input_nifti_file_list,tempdir,tduxnet_results,fold_int=fold_int,infer_overlap=infer_overlap)
+        if not os.path.exists(output_file):
+            raise ValueError(f"inference failed! unable to find prediction file: {output_file}")
+        shutil.copy(output_file,output_nifti_file)
+
+    pred_obj = sitk.ReadImage(output_nifti_file)
+    pred = sitk.GetArrayFromImage(pred_obj)
+    wlung = np.logical_or(pred_obj==1,pred_obj==2)
+    progression_ratio = np.sum(pred_obj==1)/np.sum(wlung)
+    df = pd.DataFrame({"model_name":"3duxnet","stp_ratio":{progression_ratio}})
+    df.to_csv(csv_file,index=False)
+
+raise NotImplementedError()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input_nifti_file')
-    parser.add_argument('output_folder')
-    parser.add_argument('pretrained_pth')
-    parser.add_argument('--fold-str',type=str,default='fold_0',choices=['fold_0','fold_1','fold_2','fold_3','fold_4'])
+    parser.add_argument('output_nifti_file')
+    parser.add_argument('csv_file')
+    parser.add_argument('tduxnet_results')
+    parser.add_argument('--fold-int',type=int,default=1,choices=[0,1,2,3,4])
 
     args = parser.parse_args()
     input_nifti_file = args.input_nifti_file
-    output_folder = args.output_folder
-    pretrained_pth = args.pretrained_pth
-    fold_str = args.fold_str
+    output_nifti_file = args.output_nifti_file
+    csv_file = args.csv_file
+    tduxnet_results = args.tduxnet_results
+    fold_int = args.fold_int
 
-    os.makedirs(output_folder,exist_ok=True)
+    main_one(input_nifti_file,output_nifti_file,csv_file,tduxnet_results,fold_int)
 
-    infer_overlap = 0.5
-    input_nifti_file_list = [input_nifti_file]
 
-    for input_file in input_nifti_file_list:
-        basename = os.path.basename(input_file)
-        casename = basename.replace(".nii.gz","")
-        output_file = os.path.join(output_folder,casename,f"{casename}_pred.nii.gz")
-        if os.path.exists(output_file):
-            raise ValueError("file exists no need for inference!")
+"""
+tduxnet_results = f"{fold_str}/best_metric_model.pth"
+pretrained_pth = f"/placeholder/dataset/stp/tduxnet_results/{fold_str}/best_metric_model.pth"
 
-    main(input_nifti_file_list,output_folder,pretrained_pth,infer_overlap)
+"""
