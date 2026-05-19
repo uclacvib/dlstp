@@ -131,7 +131,7 @@ def main_one(input_nifti_file,output_nifti_file,csv_file,tduxnet_results,fold_in
     df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
-raise NotImplementedError()
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input_nifti_file')
