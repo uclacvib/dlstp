@@ -30,6 +30,9 @@ COPY --chmod=666 nnUNetTrainer.py /opt/U-Mamba/umamba/nnunetv2/training/nnUNetTr
 WORKDIR /opt
 COPY --chmod=666 inference.py /opt
 
-# ## example 2 lines provided if need to run as non-root
-# RUN useradd -u 1000 ubuntu
+# (optional) option 1 switch to default non root
 # USER ubuntu
+
+# (optional) option 2 switch to new user that is non root
+# RUN useradd -u 1001 -g 1001 newuser
+# USER newuser

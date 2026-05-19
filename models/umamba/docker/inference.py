@@ -16,8 +16,12 @@ export UMAMBA_FOLDER="/redactedsharedrive/pteng/pteng-public/dataset/stp/"
 import os
 os.environ['PYTORCH_CUDA_ALLOC_CONF']="expandable_segments:True"
 os.environ['nnUNet_n_proc_DA']="4"
-os.environ['TRITON_HOME']='None'
-os.environ['TRITON_CACHE_DIR']='None'
+os.environ['TORCH_HOME']='/tmp/.torch'
+os.environ['XDG_CACHE_HOME']='/tmp/.xdgcache'
+os.environ['TORCH_COMPILE_DEBUG_DIR']='/tmp/.torchdebug'
+os.environ['TORCHINDUCTOR_CACHE_DIR']='/tmp/.torchinductor'
+os.environ['TRITON_HOME']='/tmp/.tritonhome'
+os.environ['TRITON_CACHE_DIR']='/tmp/.triton'
 os.environ['UMAMBA_FOLDER']='None'
 os.environ['nnUNet_results']='None'
 os.environ['nnUNet_raw']='None'
@@ -73,7 +77,6 @@ def main_one(input_nifti_file,output_nifti_file,csv_file,umamba_results,fold_int
     df = pd.DataFrame([{"model_name":"unetr","stp_ratio":progression_ratio}])
     df.to_csv(csv_file,index=False)
 
-raise NotImplementedError()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('input_nifti_file')
