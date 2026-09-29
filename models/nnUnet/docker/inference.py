@@ -55,17 +55,22 @@ if __name__ == "__main__":
     parser.add_argument('input_nifti_file')
     parser.add_argument('output_nifti_file')
     parser.add_argument('csv_file')
-    parser.add_argument('nnUNet_results')
+    parser.add_argument('--weights_folder',type=str,default=None)
     parser.add_argument('--fold-int',type=int,default=0,choices=[0,1,2,3,4])
 
     args = parser.parse_args()
     input_nifti_file = args.input_nifti_file
     output_nifti_file = args.output_nifti_file
     csv_file = args.csv_file
-    nnUNet_results = args.nnUNet_results
+    weights_folder = args.weights_folder
     fold_int = args.fold_int
 
-    main_one(input_nifti_file,output_nifti_file,csv_file,nnUNet_results,fold_int=fold_int)
+    if weights_folder is None:
+        assert(os.environ.get("HF_ACCESS_TOKEN") is not None)
+        from save_weights import model_repo_folder
+        weights_folder = model_repo_folder # used by cvib-airflow
+
+    main_one(input_nifti_file,output_nifti_file,csv_file,weights_folder,fold_int=fold_int)
 
 
 """
