@@ -5,3 +5,4 @@ FROM projectmonai/monai:1.5.0
 
 WORKDIR /opt
 COPY --chmod=666 inference.py /opt
+COPY --chmod=666 save_weights.py /opt

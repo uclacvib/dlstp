@@ -10,3 +10,4 @@ COPY --chmod=666 nnUNetTrainer.py /opt/conda/lib/python3.11/site-packages/nnunet
 
 WORKDIR /opt
 COPY --chmod=666 inference.py /opt
+COPY --chmod=666 save_weights.py /opt

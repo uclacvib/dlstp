@@ -29,6 +29,7 @@ COPY --chmod=666 nnUNetTrainer.py /opt/U-Mamba/umamba/nnunetv2/training/nnUNetTr
 
 WORKDIR /opt
 COPY --chmod=666 inference.py /opt
+COPY --chmod=666 save_weights.py /opt
 
 # (optional) option 1 switch to default non root
 # USER ubuntu

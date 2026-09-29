@@ -13,3 +13,4 @@ RUN pip install -r /tmp/requirements.txt
 COPY --chmod=666 load_datasets_transforms.py /opt/3DUX-Net
 COPY --chmod=666 main_train.py /opt/3DUX-Net
 COPY --chmod=666 inference.py /opt
+COPY --chmod=666 save_weights.py /opt

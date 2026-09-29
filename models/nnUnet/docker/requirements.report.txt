@@ -1,6 +1,6 @@
 SimpleITK==2.5.5
 pydicom==3.0.2
-pandas==3.0.3
+pandas<3.0
 scikit-learn==1.8.0
 imageio==2.37.3
 moviepy==2.2.1
