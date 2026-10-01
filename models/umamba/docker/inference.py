@@ -97,7 +97,7 @@ if __name__ == "__main__":
     if weights_folder is None:
         assert(os.environ.get("HF_ACCESS_TOKEN") is not None)
         from save_weights import model_repo_folder
-        weights_folder = model_repo_folder # used by cvib-airflow
+        weights_folder = os.path.join(model_repo_folder,"Dataset020_STP/nnUNetTrainerUMambaEncNoAMP__nnUNetPlans__3d_fullres") # used by cvib-airflow
 
     main_one(input_nifti_file,output_nifti_file,output_csv_file,weights_folder,fold_int=fold_int)
 
